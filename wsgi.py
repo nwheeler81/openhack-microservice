@@ -8,7 +8,7 @@ from cassandra.query import BatchStatement
 from cassandra import ConsistencyLevel
 import os
 
-app = Flask(__name__)
+application = Flask(__name__)
 
 db = os.environ.get('CASSANDRA_HOST', '127.0.0.1')
 
@@ -17,11 +17,11 @@ raitings = []
 cluster = Cluster([db])
 session = cluster.connect()
 
-@app.errorhandler(404)
+@application.errorhandler(404)
 def not_found(error):
     return make_response(json.dumps({'error': 'not found'}), 404)
 
-@app.route('/raitings/api/v1.0/shops/send',methods=['POST'])
+@application.route('/raitings/api/v1.0/shops/send',methods=['POST'])
 def create_raiting():
     if not request.json or not 'raiting_by_user' in request.json:
         abort(400)
@@ -34,7 +34,7 @@ def create_raiting():
     insert_raiting(request.json['store_id'],request.json['product_name'],request.json['price'],request.json['raiting_by_user'])
     return json.dumps({'raiting': raiting}), 201
 
-@app.route('/receipts/api/v1.0/shops/send',methods=['POST'])
+@application.route('/receipts/api/v1.0/shops/send',methods=['POST'])
 def create_receipts():
     if not request.json:
         abort(400)
@@ -48,7 +48,7 @@ def create_receipts():
                 request.json['store_id'])
     return json.dumps({'receipts': receipts}), 201
 
-@app.route('/raitings/api/v1.0/shops/<int:shop_id>', methods=['GET'])
+@application.route('/raitings/api/v1.0/shops/<int:shop_id>', methods=['GET'])
 def get_raitings(shop_id):
     pass
 #    raiting = [shop for shop in shops if shop['shop_id'] == shop_id] 
@@ -73,4 +73,4 @@ def index():
     return "Working"
 
 if __name__=='__main__':
-    app.run(debug=True)
+    application.run(debug=False)
