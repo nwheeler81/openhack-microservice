@@ -46,3 +46,6 @@ CREATE TABLE shop_receipts.receipts_by_store_id (
     AND min_index_interval = 128
     AND read_repair_chance = 0.0
     AND speculative_retry = '99PERCENTILE';
+
+CREATE MATERIALIZED VIEW a1_ratings AS SELECT store_id, product_name, ts, price, raiting FROM shop_raitings.raitings_by_shop_id WHERE store_id IS NOT NULL AND product_name IS NOT NULL AND ts IS NOT NULL PRIMARY KEY (store_id, ts, product_name);
+CREATE MATERIALIZED VIEW a2_receipts AS SELECT store_id, topic, ts, value FROM shop_receipts.receipts_by_store_id WHERE store_id IS NOT NULL AND topic IS NOT NULL and ts IS NOT NULL and value IS NOT NULL PRIMARY KEY (store_id, topic, ts);
